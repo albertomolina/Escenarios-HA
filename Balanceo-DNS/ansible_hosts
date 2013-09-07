@@ -1,0 +1,5 @@
+nodo1 ansible_ssh_host=10.10.10.101
+
+nodo2 ansible_ssh_host=10.10.10.102
+
+dns ansible_ssh_host=10.10.10.103
