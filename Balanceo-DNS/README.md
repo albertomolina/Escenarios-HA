@@ -7,9 +7,9 @@ se conoce como DNS round robin [1]
 En este caso vamos a realizar un balanceo de carga entre dos servidores web,
 para lo que creamos un escenario con tres equipos:
 
-nodo1: 10.1.1.101 <- Servidor web
-nodo2: 10.1.1.102 <- Servidor web
-dns: 10.1.1.103 <- Servidor DNS
+* nodo1: 10.1.1.101 <- Servidor web
+* nodo2: 10.1.1.102 <- Servidor web
+* dns: 10.1.1.103 <- Servidor DNS
 
 ## Levantar el escenario
 
