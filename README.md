@@ -4,8 +4,9 @@ Este repositorio contiene los escenarios para los ejercicios de clústeres de
 alta disponibilidad del curso "Seguridad y Alta Disponibilidad" impartido en el
 CEP de Lora del Río en Septiembre de 2013
 
-Cada directorio contiene un escenario para montar algún tipo de escenario de
-alta disponibilidad o balanceo de carga de forma sencilla y automática.
+Cada directorio contiene todos los ficheros necesarios para montar algún tipo de
+escenario de alta disponibilidad o balanceo de carga de forma sencilla y
+automática.
 
 Para poder desplegar los diferentes clústeres, basta con acceder a cada
 directorio y ejecutar las siguientes instrucciones:
