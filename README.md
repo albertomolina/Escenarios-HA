@@ -32,6 +32,10 @@ La versión utilizada en este caso ha sido la 1.3.1
 
 Se ha utilizado sólo el box oficial de precise32 disponible en http://files.vagrantup.com/precise32.box
 
+```
+$ vagrant box add precise32 http://files.vagrantup.com/precise32.box
+```
+
 ### Instalación de virtualbox
 
 Vagrant puede utilizar diferentes proveedores (hipervisores para ejecutar las
