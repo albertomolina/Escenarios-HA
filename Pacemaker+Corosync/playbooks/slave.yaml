@@ -1,0 +1,20 @@
+---
+- name: Corosync and pacemaker installation
+  hosts: nodo2
+  sudo: True
+  tasks:
+  - name: Ensure corosync and pacemaker are installed
+    apt: pkg={{ item }}
+    with_items:
+      - corosync
+      - pacemaker
+      
+  - name: Corosync authentication key copy
+    command: /usr/sbin/coro
+    notify:
+      - restart corosync
+
+  handlers:
+  - name: restart corosync
+    service: name=corosync state=restarted
+    

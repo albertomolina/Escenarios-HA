@@ -1,0 +1,42 @@
+---
+- name: Corosync and pacemaker installation
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure ntp, corosync and pacemaker are installed
+    apt: pkg={{ item }}
+    with_items:
+      - ntp
+      - corosync
+      - pacemaker
+      
+  - name: Corosync authentication key copy
+    copy: >
+      src=files/etc/corosync/authkey
+      dest=/etc/corosync/authkey
+      owner=root
+      group=root
+      mode=400
+      
+  - name: Heartbeat address configuration
+    copy: >
+      src=files/etc/corosync/corosync.conf
+      dest=/etc/corosync/corosync.conf
+      owner=root
+      group=root
+      mode=644
+
+  - name: Corosync default file
+    copy: >
+      src=files/etc/default/corosync
+      dest=/etc/default/corosync
+      owner=root
+      group=root
+      mode=644
+    notify:
+      - restart corosync
+
+  handlers:
+  - name: restart corosync
+    service: name=corosync state=restarted
+    
