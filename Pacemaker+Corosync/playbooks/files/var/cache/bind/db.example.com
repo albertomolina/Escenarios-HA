@@ -11,6 +11,6 @@ example.com     IN SOA dns.example.com. postmaster.example.com. (
 $ORIGIN example.com.
 nodo1		A	10.1.1.101
 nodo2		A	10.1.1.102
+nodo3		A	10.1.1.104
 dns		A	10.1.1.103
-www		A	10.1.1.101
-www		A	10.1.1.102
+www		A	10.1.1.100
