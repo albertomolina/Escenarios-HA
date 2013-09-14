@@ -44,7 +44,7 @@
     service: name=corosync state=restarted
 
 - name: Setting pacemaker resources
-  hosts: nodo1
+  hosts: node1
   sudo: True
   tasks:
   - name: Copy pacemaker resource dump file to node1

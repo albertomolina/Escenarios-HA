@@ -1,6 +1,5 @@
-node nodo1
-node nodo2
-node nodo3
+node node1
+node node2
 primitive ClusterIP ocf:heartbeat:IPaddr2 \
 	  params ip="10.1.1.100" nic="eth1" \
 	  op monitor interval="10s" \
