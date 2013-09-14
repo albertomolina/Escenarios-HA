@@ -14,6 +14,13 @@ directorio y ejecutar las siguientes instrucciones:
 $ vagrant up
 $ ansible-playbook escenario.yaml
 ```
+Nota: Debido a que git modifica los permisos de todos los ficheros a 644, una
+vez clonado el repositorio es necesario modificar a mano los permisos de la
+clave privada del usuario vagrant en todos los directorios. En caso contrario no
+funcionarán los playbooks de ansible:
+```
+$ chmod 400 vagrant_private_key
+```
 
 ## Requisitos
 
