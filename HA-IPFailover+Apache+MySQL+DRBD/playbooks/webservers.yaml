@@ -1,0 +1,30 @@
+---
+- name: LAMP installation
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure LAMP components are installed
+    apt: pkg={{ item }}
+    with_items:
+      - apache2
+      - python-mysqldb
+      - mysql-server
+      - php5
+      - php5-mysql
+      - libapache2-mod-php5
+      - wordpress
+      - curl
+      
+  - name: copy .my.cnf file with root password credentials
+    template: src=files/root/.my.cnf dest=/root/.my.cnf owner=root mode=0600
+
+  - name: update mysql root password for all root accounts
+    mysql_user: name=root host={{ item }} password=root
+    with_items:
+      - localhost
+      - 127.0.0.1       
+                  
+  - name: Configure MySQL for wordpress
+    command: /bin/sh /usr/share/doc/wordpress/examples/setup-mysql \
+      -n wordpress www.example.com
+  
