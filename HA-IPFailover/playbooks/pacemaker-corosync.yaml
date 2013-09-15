@@ -29,7 +29,7 @@
     notify:
       - restart corosync
 
-  - name: Configure corosync default file to restart daemon
+  - name: Configure corosync default file
     copy: >
       src=files/etc/default/corosync
       dest=/etc/default/corosync
@@ -53,8 +53,8 @@
       dest=/var/tmp/pacemaker.dump
       owner=root
       group=root
-    notify: Set ClusterIP as a resource
+    notify: Set resources
     
   handlers:
-    - name: Set ClusterIP as a resource
+    - name: Set resources
       command: /usr/sbin/crm configure load update /var/tmp/pacemaker.dump

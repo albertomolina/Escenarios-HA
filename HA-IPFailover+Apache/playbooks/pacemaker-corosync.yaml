@@ -9,7 +9,7 @@
       - corosync
       - pacemaker
       
-  - name: Corosync authentication key copy
+  - name: Copy corosync authentication key
     copy: >
       src=files/etc/corosync/authkey
       dest=/etc/corosync/authkey
@@ -19,7 +19,7 @@
     notify:
       - restart corosync
       
-  - name: Heartbeat address configuration
+  - name: Configure heartbeat network address
     copy: >
       src=files/etc/corosync/corosync.conf
       dest=/etc/corosync/corosync.conf
@@ -29,7 +29,7 @@
     notify:
       - restart corosync
 
-  - name: Corosync default file
+  - name: Configure corosync default file 
     copy: >
       src=files/etc/default/corosync
       dest=/etc/default/corosync
@@ -43,7 +43,7 @@
   - name: restart corosync
     service: name=corosync state=restarted
 
-- name: Setting pacemaker resources
+- name: Set pacemaker resources
   hosts: node1
   sudo: True
   tasks:
@@ -53,3 +53,8 @@
       dest=/var/tmp/pacemaker.dump
       owner=root
       group=root
+    notify: Set resources
+  
+  handlers:
+    - name: Set resources
+      command: /usr/sbin/crm configure load update /var/tmp/pacemaker.dump  

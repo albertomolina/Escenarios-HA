@@ -2,7 +2,7 @@
 - hosts: all
   sudo: True
   tasks: 
-  - name: Setting dns node as primary nameserver
+  - name: Set dns node as primary nameserver
     copy: >
       src=files/etc/resolv.conf
       dest=/etc/resolv.conf

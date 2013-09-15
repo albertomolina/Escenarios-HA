@@ -1,5 +1,15 @@
-# Ejercicio de clúster de HA con pacemaker y corosync
+# HA con pacemaker y corosync. IP Failover
 
+El caso más sencillo de cluster de alta disponibilidad es utilizar dos nodos que
+funcionen en modo maestro esclavo y que ofrezcan como recurso de alta
+disponibilidad una dirección IP, que se denomina en algunos casos IP virtual.
+
+Cada nodo del clúster posee su propia dirección IP y uno de ellos posee además
+la dirección IP virtual. El software de alta disponibilidad está monitorizando
+ambos nodos en todo momoento y en el caso de que el nodo que ofrece el recurso
+tenga algún problema, el recurso (la dirección IP en este caso) pasa al nodo que
+esté 
+está asociada sólo a uno de ellos 
 Utilizando entradas tipo A duplicadas en un servidor DNS es posible
 realizar de forma muy sencilla un balanceo de carga entre varios equipos, esto
 se conoce como DNS round robin [1]
