@@ -6,19 +6,16 @@ disponibilidad una dirección IP, que se denomina en algunos casos IP virtual.
 
 Cada nodo del clúster posee su propia dirección IP y uno de ellos posee además
 la dirección IP virtual. El software de alta disponibilidad está monitorizando
-ambos nodos en todo momoento y en el caso de que el nodo que ofrece el recurso
+ambos nodos en todo momento y en el caso de que el nodo que ofrece el recurso
 tenga algún problema, el recurso (la dirección IP en este caso) pasa al nodo que
-esté 
-está asociada sólo a uno de ellos 
-Utilizando entradas tipo A duplicadas en un servidor DNS es posible
-realizar de forma muy sencilla un balanceo de carga entre varios equipos, esto
-se conoce como DNS round robin [1]
+esté en modo esclavo.
 
-En este caso vamos a realizar un balanceo de carga entre dos servidores web,
-para lo que creamos un escenario con tres equipos:
+Vamos a utilizar la misma configuración de equipos que en el primer ejercicio,
+salvo que en esta ocasión utilizaremos la dirección IP 10.1.1.100 como IP
+virtual asociada a www.example.com
 
-* nodo1: 10.1.1.101 <- Servidor web
-* nodo2: 10.1.1.102 <- Servidor web
+* nodo1: 10.1.1.101
+* nodo2: 10.1.1.102
 * dns: 10.1.1.103 <- Servidor DNS
 
 ## Levantar el escenario
@@ -34,32 +31,33 @@ Que levanta y configura la red en los tres nodos.
 ## Configurar el escenario
 
 Se incluyen los "playbooks" necesarios para la configuración con ansible de los
-dos servidores web y el servidor dns.
+dos nodos y el servidor dns. Realizamos la configuración completa del escenario
+con:
 
-La configuración se realiza utilizando la clave privada ssh del usuario vagrant,
-que es necesario que no pueda leer ningún otro usuario, por lo que hay que
-protegerla adecuadamente:
-```
-$ chmod 600 vagrant_private_key
-```
-Una vez protegida la clave, podemos configurar todos los nodos:
 ```
 $ ansible-playbook escenario.yaml
 ```
 
 ## Prueba de funcionamiento
 
-Si no ha habido errores durante la ejecución de los playbooks, se puede
-comprobar que se realiza el balanceo www.example.com entre nodo1 y nodo2,
-repitiendo la consulta DNS con dig:
+* Edita el fichero /etc/resolv.conf de tu equipo y añade como servidor DNS primario el nodo "dns" que tiene la dirección IP 10.1.1.103
+* Comprueba la conectividad con los nodos del cluster con ping Utiliza dig para resolver el nombre www.example.com:
 ```
 $ dig @10.1.1.103 www.example.com
 ```
-
-También puede verse de forma mucho más clara a través del navegador, para lo
-cual es necesario añadir la dirección IP como servidor DNS primario la dirección
-10.1.1.103 y podremos comprobar como se balancean las peticiones entre los dos
-servidores web nodo1 y nodo2 (es necesario forzar la recarga, CTRL+F5 por
-ejemplo).
-
-[1] http://en.wikipedia.org/wiki/Round-robin_DNS
+* Comprueba que la dirección www.example.com está asociada a la dirección IP
+10.1.1.100, que en este escenario es la IP virtual que estará asociada en todo
+momento al nodo que esté en modo maestro
+* Accede a uno de los nodos del clúster y ejecuta la instrucción
+crm_mon. Comprueba que los dos nodos están operativos y que el recurso
+IPCluster está funcionando correctamente en uno de ellos
+* Haz ping a www.example.com desde la máquina anfitriona y comprueba la tabla
+arp. Podrás verificar que la dirección MAC asociada a la dirección IP
+10.1.1.100 coincide con la del nodo maestro en estos momentos.
+* Para el nodo maestro (supongamos que es node2):
+```
+$ vagrant halt node2
+```
+* Haz ping a www.example.com y comprueba que la tabla arp ha cambiado. Ahora la dirección MAC asociada a la dirección IP 10.1.1.100 es la del otro nodo
+* Entra en el nodo maestro y comprueba el estado del clúster con crm_mon
+* Levanta de nuevo el nodo que estaba parado. Los recursos no van a volver a él porque en la configuración se ha penalizado el movimiento de los recursos, estos tienden a quedarse en el nodo en el que se están ejecutando, no a volver al nodo que era maestro
