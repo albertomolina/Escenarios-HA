@@ -47,6 +47,9 @@
   hosts: node1
   sudo: True
   tasks:
+  - name: Set stonith to false
+    command: /usr/sbin/crm configure property stonith-enabled=false
+      
   - name: Copy pacemaker resource dump file to node1
     copy: >-
       src=files/pacemaker.dump
