@@ -2,3 +2,4 @@
 - include: playbooks/webservers.yaml
 - include: playbooks/bind.yaml
 - include: playbooks/pacemaker-corosync.yaml
+- include: playbooks/drbd.yaml

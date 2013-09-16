@@ -7,6 +7,18 @@ Vagrant.configure("2") do |config|
     node1.vm.hostname = "node1"
     node1.vm.network :private_network, ip: "10.1.1.101"
     node1.vm.network :private_network, ip: "10.1.2.101"
+    node1.vm.provider "virtualbox" do |v|
+      # Create an extra disk of 100 MB (testing purposes)
+      v.customize ["createhd", 
+                   '--filename', "./disco1",
+                   '--size', 100 ]
+      v.customize ['storageattach', :id, 
+                   '--storagectl', 'SATA Controller', 
+                   '--port', 1, 
+                   '--device', 0, 
+                   '--type', 'hdd', 
+                   '--medium', "./disco1.vdi"]
+    end
     # node1.vm.provision "ansible" do |ansible|
     #   ansible.playbook = "../playbooks/webservers.yaml"
     #   ansible.hosts = "webservers"
@@ -17,6 +29,18 @@ Vagrant.configure("2") do |config|
     node2.vm.hostname = "node2"
     node2.vm.network :private_network, ip: "10.1.1.102"
     node2.vm.network :private_network, ip: "10.1.2.102"
+    node2.vm.provider "virtualbox" do |v|
+      # Create an extra disk of 100 MB (testing purposes)
+      v.customize ["createhd", 
+                   '--filename', "./disco2",
+                   '--size', 100 ]
+      v.customize ['storageattach', :id, 
+                   '--storagectl', 'SATA Controller', 
+                   '--port', 1, 
+                   '--device', 0, 
+                   '--type', 'hdd', 
+                   '--medium', "./disco2.vdi"]
+    end
     # node2.vm.provision "ansible" do |ansible|
     #   ansible.playbook = "../playbooks/webservers.yaml"
     #   ansible.hosts = "webservers"
