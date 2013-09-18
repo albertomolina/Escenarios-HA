@@ -1,0 +1,28 @@
+---
+- name: OCFS2 installation and configuration
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure ocfs2-tools is installed
+    apt: pkg=ocfs2-tools
+
+  - name: Set cluster.conf
+    copy: >-
+      src=files/etc/ocfs2/cluster.conf
+      dest=/etc/ocfs2/cluster.conf
+      
+  - name: Modify o2cb default file
+    copy: >-
+      src=files/etc/default/o2cb
+      dest=/etc/default/o2cb
+      owner=root
+      group=root
+      mode=644
+    notify: start ocfs2
+
+  handlers:
+    - name: start ocfs2
+      service: name={{ item }} state=started      
+      with_items:
+        - o2cb
+        - ocfs2

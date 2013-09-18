@@ -1,0 +1,7 @@
+---
+- name: LAMP installation
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure apache is installed
+    apt: pkg=apache2

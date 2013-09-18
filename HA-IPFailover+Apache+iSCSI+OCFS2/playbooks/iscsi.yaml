@@ -1,0 +1,42 @@
+---
+- name: iSCSI target
+  hosts: dns
+  sudo: True
+  tasks:
+  - name: Ensure iscsitarget is installed
+    apt: pkg={{ item }}
+    with_items:
+      - iscsitarget
+      - iscsitarget-dkms
+      - linux-headers-3.2.0-23-generic-pae
+      
+  - name: Modify iscsitarget default file
+    copy: >-
+      src=files/etc/default/iscsitarget
+      dest=/etc/default/iscsitarget
+      owner=root
+      group=root
+      mode=644
+
+  - name: Start iscsitarget
+    service: name=iscsitarget state=started
+
+  - name: Create a target
+    command: >-
+      ietadm --op new --tid=1 --params Name=iqn.2013-09.com.example:lun1
+      
+  - name: Add a LUN to the target
+    command: >-
+      ietadm --op new --tid=1 --lun=1 --params Path=/dev/sdb,Type=fileio
+      
+# - name: iSCSI initiators
+#   hosts: webservers
+#   sudo: True
+#   tasks:
+#     - name: Ensure open-iscsi is installed
+#       apt: pkg=open-iscsi
+
+#     - name: Open a session to the target iqn.2013-09.com.example:lun1
+#       command: >-
+#         iscsiadm -m node -T iqn.2013-09.com.example:lun1
+#         -p 10.1.1.103:3260 --login
