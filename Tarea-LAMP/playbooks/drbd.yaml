@@ -1,0 +1,36 @@
+---
+- name: DRBD installation and configuration
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure drbd8-utils is installed
+    apt: pkg=drbd8-utils
+
+  - name: Set drbd configuration
+    copy: >-
+      src=files/etc/drbd.d/global_common.conf
+      dest=/etc/drbd.d/global_common.conf
+      
+#   - name: Create wwwdata device
+#     command: /sbin/drbdadm create-md wwwdata
+
+#   - name: Load drbd module
+#     command: /sbin/modprobe drbd
+
+#   - name:
+#     command: /sbin/drbdadm up wwwdata
+    
+# - name: Format drbd device
+#   hosts: node1
+#   sudo: True
+#   tasks:
+
+#     - name: Overwrite data
+#       command: drbdadm -- --overwrite-data-of-peer primary wwwdata
+
+#     - name: Wait for drbadm to finish
+#       command: /bin/sleep 100
+
+#     - name: Create a ext4 filesystem on /dev/drbd1
+#       command: /sbin/mkfs.ext4 /dev/drbd1
+      

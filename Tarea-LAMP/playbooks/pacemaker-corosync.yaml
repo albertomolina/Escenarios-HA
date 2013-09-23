@@ -1,0 +1,63 @@
+---
+- name: Corosync and pacemaker installation
+  hosts: webservers
+  sudo: True
+  tasks:
+  - name: Ensure corosync and pacemaker are installed
+    apt: pkg={{ item }}
+    with_items:
+      - corosync
+      - pacemaker
+      
+  - name: Copy corosync authentication key
+    copy: >
+      src=files/etc/corosync/authkey
+      dest=/etc/corosync/authkey
+      owner=root
+      group=root
+      mode=400
+    notify:
+      - restart corosync
+      
+  - name: Configure heartbeat network address
+    copy: >
+      src=files/etc/corosync/corosync.conf
+      dest=/etc/corosync/corosync.conf
+      owner=root
+      group=root
+      mode=644
+    notify:
+      - restart corosync
+
+  - name: Configure corosync default file 
+    copy: >
+      src=files/etc/default/corosync
+      dest=/etc/default/corosync
+      owner=root
+      group=root
+      mode=644
+    notify:
+      - restart corosync
+
+  handlers:
+  - name: restart corosync
+    service: name=corosync state=restarted
+
+- name: Set pacemaker resources
+  hosts: node1
+  sudo: True
+  tasks:
+  - name: Set stonith to false
+    command: /usr/sbin/crm configure property stonith-enabled=false
+      
+  - name: Copy pacemaker resource dump file to node1
+    copy: >-
+      src=files/pacemaker.dump
+      dest=/var/tmp/pacemaker.dump
+      owner=root
+      group=root
+    notify: Set resources
+  
+  handlers:
+    - name: Set resources
+      command: /usr/sbin/crm configure load update /var/tmp/pacemaker.dump  
