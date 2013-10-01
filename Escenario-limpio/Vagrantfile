@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define :node1 do |node1|
+    node1.vm.box = "precise32"
+    node1.vm.hostname = "node1"
+    node1.vm.network :private_network, ip: "10.1.1.101"
+    node1.vm.network :private_network, ip: "10.1.2.101"
+    # node1.vm.provision "ansible" do |ansible|
+    #   ansible.playbook = "../playbooks/webservers.yaml"
+    #   ansible.hosts = "webservers"
+    #end
+  end
+  config.vm.define :node2 do |node2|
+    node2.vm.box = "precise32"
+    node2.vm.hostname = "node2"
+    node2.vm.network :private_network, ip: "10.1.1.102"
+    node2.vm.network :private_network, ip: "10.1.2.102"
+    # node2.vm.provision "ansible" do |ansible|
+    #   ansible.playbook = "../playbooks/webservers.yaml"
+    #   ansible.hosts = "webservers"
+    #end
+  end
+  config.vm.define :dns do |dns|
+    dns.vm.box = "precise32"
+    dns.vm.hostname = "dns"
+    #dns.vm.provision :shell, :path => "bootstrap.sh"
+    #dns.vm.network :public_network,:bridge=>"wlan0"
+    dns.vm.network :private_network, ip: "10.1.1.103"
+  end
+end

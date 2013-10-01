@@ -1,0 +1,11 @@
+node node1
+node node2
+primitive ClusterIP ocf:heartbeat:IPaddr2 \
+	  params ip="10.1.1.100" nic="eth1" \
+	  op monitor interval="10s" \
+	  meta is-managed="true"
+property $id="cib-bootstrap-options" \
+	  dc-version="1.1.6-9971ebba4494012a93c03b40a2c58ec0eb60f50c" \
+	  cluster-infrastructure="openais" \
+          stonith-enabled="false" \
+	  no-quorum-policy="ignore"
