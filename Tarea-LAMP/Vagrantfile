@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
                    '--port', 1, 
                    '--device', 0, 
                    '--type', 'hdd', 
-                   '--medium', "./disco1.vdi"]
+                   '--medium', "disco1.vdi"]
       v.customize ["createhd", 
                    '--filename', "./disco3",
                    '--size', 100 ]
@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
                    '--port', 2, 
                    '--device', 0, 
                    '--type', 'hdd', 
-                   '--medium', "./disco3.vdi"]
+                   '--medium', "disco3.vdi"]
     end
     # node1.vm.provision "ansible" do |ansible|
     #   ansible.playbook = "../playbooks/webservers.yaml"
@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
                    '--port', 1, 
                    '--device', 0, 
                    '--type', 'hdd', 
-                   '--medium', "./disco2.vdi"]
+                   '--medium', "disco2.vdi"]
             v.customize ["createhd", 
                    '--filename', "./disco4",
                    '--size', 100 ]
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
                    '--port', 2, 
                    '--device', 0, 
                    '--type', 'hdd', 
-                   '--medium', "./disco4.vdi"]
+                   '--medium', "disco4.vdi"]
     end
     # node2.vm.provision "ansible" do |ansible|
     #   ansible.playbook = "../playbooks/webservers.yaml"
