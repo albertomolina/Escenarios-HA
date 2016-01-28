@@ -4,7 +4,7 @@
   sudo: True
   tasks:
   - name: Ensure bind9 is installed
-    apt: pkg=bind9
+    apt: name=bind9
 
   - name: Configure properly named.conf.local
     copy: >
