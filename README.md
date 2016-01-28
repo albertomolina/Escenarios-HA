@@ -1,8 +1,9 @@
-# Curso-SAD
+# Escenarios-HA
 
 Este repositorio contiene los escenarios para los ejercicios de clústeres de
 alta disponibilidad del curso "Seguridad y Alta Disponibilidad" impartido en el
-CEP de Lora del Río en Septiembre de 2013
+CEP de Lora del Río en Septiembre de 2013, pero actualizados en 2016
+con versiones más actuales de software.
 
 Cada directorio contiene todos los ficheros necesarios para montar algún tipo de
 escenario de alta disponibilidad o balanceo de carga de forma sencilla y
@@ -33,27 +34,22 @@ En versiones anteriores era posible instalar vagrant como una gema de ruby, pero
 en las versiones actuales es necesario descargarlo directamente de
 http://vagrantup.com
 
-La versión utilizada en este caso ha sido la 1.3.1
+La versión utilizada en este caso ha sido la 1.6.5
 
 #### Boxes de vagrant
 
-Se ha utilizado sólo el box oficial de precise32 disponible en http://files.vagrantup.com/precise32.box
+Se ha utilizado sólo el box oficial de Ubuntu 14.04 LTS disponible en https://atlas.hashicorp.com/ubuntu/boxes/trusty64
 
 ```
-$ vagrant box add precise32 http://files.vagrantup.com/precise32.box
+$ vagrant box add ubuntu/trusty64
 ```
 
 ### Instalación de virtualbox
 
 Vagrant puede utilizar diferentes proveedores (hipervisores para ejecutar las
 máquinas virtuales), pero el más habitual es virtualbox. En este caso hemos
-utilizado la versión 4.2.18 descargada directamente desde http://virtualbox.org/
+utilizado la versión 4.3.32 
 
 ### Instalación de ansible
 
-La forma más sencilla de instalar ansible es como paquete python con pip:
-```
-# apt-get install python-pip
-# pip install ansible
-```
-Los escenarios están configurados con la versión 1.2.3 de ansible
+Ansible se puede instalar de diferentes modos, en este caso hemos utilizado la versión 1.7.2 disponible como paquete en Debian 8 (Jessie)
