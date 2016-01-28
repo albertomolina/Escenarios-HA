@@ -35,7 +35,7 @@ dos nodos y el servidor dns. Realizamos la configuración completa del escenario
 con:
 
 ```
-$ ansible-playbook escenario.yaml
+$ ansible-playbook site.yaml
 ```
 
 ## Prueba de funcionamiento
