@@ -8,7 +8,8 @@
     with_items:
       - corosync
       - pacemaker
-      
+    notify: restart pacemaker
+    
   - name: Copy corosync authentication key
     copy: >
       src=files/etc/corosync/authkey
@@ -19,7 +20,7 @@
     notify:
       - restart corosync
       
-  - name: Configure heartbeat network address
+  - name: Configure heartbeat network address 
     copy: >
       src=files/etc/corosync/corosync.conf
       dest=/etc/corosync/corosync.conf
@@ -29,7 +30,7 @@
     notify:
       - restart corosync
 
-  - name: Configure corosync default file 
+  - name: Configure corosync default file
     copy: >
       src=files/etc/default/corosync
       dest=/etc/default/corosync
@@ -39,9 +40,14 @@
     notify:
       - restart corosync
 
+  - name: Ensure pacemaker service is enabled
+    command: update-rc.d pacemaker defaults
+    
   handlers:
   - name: restart corosync
     service: name=corosync state=restarted
+  - name: restart pacemaker
+    service: name=pacemaker state=restarted
 
 - name: Set pacemaker resources
   hosts: node1
@@ -49,7 +55,7 @@
   tasks:
   - name: Set stonith to false
     command: /usr/sbin/crm configure property stonith-enabled=false
-      
+    
   - name: Copy pacemaker resource dump file to node1
     copy: >-
       src=files/pacemaker.dump
@@ -57,7 +63,7 @@
       owner=root
       group=root
     notify: Set resources
-  
+    
   handlers:
     - name: Set resources
-      command: /usr/sbin/crm configure load update /var/tmp/pacemaker.dump  
+      command: /usr/sbin/crm configure load update /var/tmp/pacemaker.dump

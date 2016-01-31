@@ -1,7 +1,0 @@
-- include: playbooks/common.yaml
-- include: playbooks/webservers.yaml
-- include: playbooks/bind.yaml
-- include: playbooks/pacemaker-corosync.yaml
-- include: playbooks/iscsi.yaml
-- include: playbooks/ocfs2.yaml
-

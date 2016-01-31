@@ -3,8 +3,11 @@
   hosts: webservers
   sudo: True
   tasks:
+  - name: Ensure linux-extra modules are installed
+    apt: name=linux-image-extra-virtual
+    
   - name: Ensure ocfs2-tools is installed
-    apt: pkg=ocfs2-tools
+    apt: name=ocfs2-tools
 
   - name: Set cluster.conf
     copy: >-
@@ -18,11 +21,41 @@
       owner=root
       group=root
       mode=644
-    notify: start ocfs2
+    notify: restart ocfs2
 
   handlers:
-    - name: start ocfs2
+    - name: restart ocfs2
       service: name={{ item }} state=started      
       with_items:
         - o2cb
         - ocfs2
+        
+- name: Formatting and mounting OCFS2 volume on node1
+  hosts: node1
+  sudo: True
+  tasks:
+  - name: Ensure /dev/sdb has a OCFS2 file system
+    shell: yes 'y'|mkfs.ocfs2 -F /dev/sdb
+
+  - name: Ensure /dev/sdb is mounted on /var/www/html
+    mount: >-
+      name=/var/www/html
+      src=/dev/sdb
+      fstype=ocfs2
+      opts=defaults
+      state=mounted
+
+- name: Mounting OCFS2 volume on node2
+  hosts: node2
+  sudo: True
+  tasks:
+  - name: Ensure /dev/sdb is mounted on /var/www/html
+    mount: >-
+      name=/var/www/html
+      src=/dev/sdb
+      fstype=ocfs2
+      opts=defaults
+      state=mounted
+
+  
+  
