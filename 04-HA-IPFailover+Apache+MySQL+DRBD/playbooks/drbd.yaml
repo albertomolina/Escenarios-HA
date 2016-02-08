@@ -3,6 +3,9 @@
   hosts: webservers
   sudo: True
   tasks:
+  - name: Ensure linux-extra modules are installed
+    apt: name=linux-image-extra-virtual
+          
   - name: Ensure drbd8-utils is installed
     apt: pkg=drbd8-utils
 

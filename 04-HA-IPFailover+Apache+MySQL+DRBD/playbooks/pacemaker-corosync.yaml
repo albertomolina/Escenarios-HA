@@ -39,9 +39,16 @@
     notify:
       - restart corosync
 
+  - name: Ensure pacemaker service is enabled
+    command: update-rc.d pacemaker defaults
+    notify:
+      - restart pacemaker
+        
   handlers:
   - name: restart corosync
     service: name=corosync state=restarted
+  - name: restart pacemaker
+    service: name=pacemaker state=restarted            
 
 - name: Set pacemaker resources
   hosts: node1
