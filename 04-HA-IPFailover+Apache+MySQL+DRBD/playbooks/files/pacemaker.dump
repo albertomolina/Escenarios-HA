@@ -1,21 +1,33 @@
-node node1
-node node2
+node $id="167838309" node1 \
+	attributes standby="off"
+node $id="167838310" node2 \
+	attributes standby="off"
 primitive ClusterIP ocf:heartbeat:IPaddr2 \
-	  params ip="10.1.1.100" nic="eth1" \
-	  op monitor interval="30s"
+	params ip="10.1.1.100" nic="eth1" \
+	op monitor interval="30s"
+primitive WebData ocf:linbit:drbd \
+	params drbd_resource="wwwdata" \
+	op monitor interval="60s"
+primitive WebFS ocf:heartbeat:Filesystem \
+	params device="/dev/drbd/by-res/wwwdata" directory="/var/www/html" fstype="ext4"
 primitive WebSite ocf:heartbeat:apache \
-	  params configfile="/etc/apache2/apache2.conf" \
-	  statusurl="http://localhost/server-status" \
-	  op monitor interval="1min"
+	params configfile="/etc/apache2/apache2.conf" statusurl="http://localhost/server-status" \
+	op monitor interval="1min"
+ms WebDataClone WebData \
+	meta master-max="1" master-node-max="1" clone-max="2" clone-node-max="1" notify="true"
+colocation WebSite-with-WebFS inf: WebSite WebFS
+colocation fs_on_drbd inf: WebFS WebDataClone:Master
 colocation website-with-ip inf: WebSite ClusterIP
+order WebFS-after-WebData inf: WebDataClone:promote WebFS:start
+order WebSite-after-WebFS inf: WebFS WebSite
 order apache-after-ip inf: ClusterIP WebSite
 property $id="cib-bootstrap-options" \
-	 dc-version="1.1.6-9971ebba4494012a93c03b40a2c58ec0eb60f50c" \
-	 cluster-infrastructure="openais" \
-	 expected-quorum-votes="2" \
-	 stonith-enabled="false" \
-	 no-quorum-policy="ignore"
+	dc-version="1.1.6-9971ebba4494012a93c03b40a2c58ec0eb60f50c" \
+	cluster-infrastructure="openais" \
+	expected-quorum-votes="2" \
+	stonith-enabled="false" \
+	no-quorum-policy="ignore"
 rsc_defaults $id="rsc-options" \
-	     resource-stickiness="100"
+	resource-stickiness="100"
 op_defaults $id="op-options" \
-	    timeout="240s"
+	timeout="240s"
