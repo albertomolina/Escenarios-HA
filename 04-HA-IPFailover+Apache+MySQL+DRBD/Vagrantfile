@@ -8,21 +8,31 @@ Vagrant.configure("2") do |config|
     node1.vm.network :private_network, ip: "10.1.1.101"
     node1.vm.network :private_network, ip: "10.1.2.101"
     node1.vm.provider "virtualbox" do |v|
-      # Create an extra disk of 100 MB (testing purposes)
-      v.customize ["createhd", 
-                   '--filename', "./disco1",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATAController', 
-                   '--port', 1, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "./disco1.vdi"]
+      # Create an extra disk of 512 MB (testing purposes)
+      unless File.exist?("./disco1.vdi")
+        v.customize ["createhd", 
+                    '--filename', "./disco1",
+                    '--size', 512 ]
+        v.customize ['storageattach', :id, 
+                    '--storagectl', 'SATAController', 
+                    '--port', 1, 
+                    '--device', 0, 
+                    '--type', 'hdd', 
+                    '--medium', "./disco1.vdi"]
+      end
+      # Create an extra disk of 512 MB (mysql)
+      unless File.exist?("./disco_db1.vdi")
+        v.customize ["createhd", 
+                    '--filename', "./disco_db1",
+                    '--size', 512 ]
+        v.customize ['storageattach', :id, 
+                    '--storagectl', 'SATAController', 
+                    '--port', 2, 
+                    '--device', 0, 
+                    '--type', 'hdd', 
+                    '--medium', "./disco_db1.vdi"]
+      end
     end
-    # node1.vm.provision "ansible" do |ansible|
-    #   ansible.playbook = "../playbooks/webservers.yaml"
-    #   ansible.hosts = "webservers"
-    #end
   end
   config.vm.define :node2 do |node2|
     node2.vm.box = "ubuntu/trusty64"
@@ -30,21 +40,31 @@ Vagrant.configure("2") do |config|
     node2.vm.network :private_network, ip: "10.1.1.102"
     node2.vm.network :private_network, ip: "10.1.2.102"
     node2.vm.provider "virtualbox" do |v|
-      # Create an extra disk of 100 MB (testing purposes)
-      v.customize ["createhd", 
-                   '--filename', "./disco2",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATAController', 
-                   '--port', 1, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "./disco2.vdi"]
+      # Create an extra disk of 512 MB (testing purposes)
+      unless File.exist?("./disco2.vdi")
+        v.customize ["createhd", 
+                    '--filename', "./disco2",
+                    '--size', 512 ]
+        v.customize ['storageattach', :id, 
+                    '--storagectl', 'SATAController', 
+                    '--port', 1, 
+                    '--device', 0, 
+                    '--type', 'hdd', 
+                    '--medium', "./disco2.vdi"]
+      end
+      # Create an extra disk of 512 MB (mysql)
+      unless File.exist?("./disco_db2.vdi")
+        v.customize ["createhd", 
+                    '--filename', "./disco_db2",
+                    '--size', 512 ]
+        v.customize ['storageattach', :id, 
+                    '--storagectl', 'SATAController', 
+                    '--port', 2, 
+                    '--device', 0, 
+                    '--type', 'hdd', 
+                    '--medium', "./disco_db2.vdi"]
+      end
     end
-    # node2.vm.provision "ansible" do |ansible|
-    #   ansible.playbook = "../playbooks/webservers.yaml"
-    #   ansible.hosts = "webservers"
-    #end
   end
   config.vm.define :dns do |dns|
     dns.vm.box = "ubuntu/trusty64"
