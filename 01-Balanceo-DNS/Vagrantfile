@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  config.ssh.insert_key = false
   config.vm.define :nodo1 do |nodo1|
     nodo1.vm.box = "ubuntu/trusty64"
     nodo1.vm.hostname = "nodo1"
