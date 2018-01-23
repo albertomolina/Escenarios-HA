@@ -1,10 +1,10 @@
 ---
 - name: DRBD installation and configuration
   hosts: webservers
-  sudo: True
+  become: true
   tasks:
   - name: Ensure drbd8-utils is installed
-    apt: pkg=drbd8-utils
+    apt: name=drbd8-utils
 
   - name: Set drbd configuration
     copy: >-

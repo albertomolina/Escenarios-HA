@@ -1,13 +1,14 @@
 ---
 - name: Corosync and pacemaker installation
   hosts: webservers
-  sudo: True
+  become: true
   tasks:
   - name: Ensure corosync and pacemaker are installed
-    apt: pkg={{ item }}
+    apt: name={{ item }}
     with_items:
       - corosync
       - pacemaker
+      - crmsh
       
   - name: Copy corosync authentication key
     copy: >
@@ -45,7 +46,7 @@
 
 - name: Set pacemaker resources
   hosts: node1
-  sudo: True
+  become: true
   tasks:
   - name: Set stonith to false
     command: /usr/sbin/crm configure property stonith-enabled=false
