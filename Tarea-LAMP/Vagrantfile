@@ -3,69 +3,112 @@
 
 Vagrant.configure("2") do |config|
   config.vm.define :node1 do |node1|
-    node1.vm.box = "precise32"
+    # Setting ssh keys for ansible config
+    node1.ssh.insert_key = false
+    node1.ssh.private_key_path = ["vagrant_private_key", "~/.vagrant.d/insecure_private_key"]
+    node1.vm.provision "file", source: "vagrant_public_key", destination: "~/.ssh/authorized_keys"
+    node1.vm.box = "debian/stretch64"
     node1.vm.hostname = "node1"
     node1.vm.network :private_network, ip: "10.1.1.101"
     node1.vm.network :private_network, ip: "10.1.2.101"
+    dataDisk1 = './disco1.vdi'
+    dataDisk3 = './disco3.vdi'
+
     node1.vm.provider "virtualbox" do |v|
-      # Create an extra disk of 100 MB (testing purposes)
-      v.customize ["createhd", 
-                   '--filename', "./disco1",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATA Controller', 
-                   '--port', 1, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "disco1.vdi"]
-      v.customize ["createhd", 
-                   '--filename', "./disco3",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATA Controller', 
-                   '--port', 2, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "disco3.vdi"]
+      if not File.exist?(dataDisk1)
+        # Create an extra disk of 100 MB (testing purposes)
+	      v.customize ["createmedium",
+        	           '--filename', dataDisk1,
+                	   '--size', 100 ]
+      end
+      if not File.exist?(dataDisk3)
+        v.customize ["createmedium",
+                     '--filename', dataDisk3,
+                     '--size', 100 ]
+
+        # Adding a SATA controller that allow 2 hard drives
+        v.customize ['storagectl', :id,
+                     '--name', 'SATA Controller',
+                     '--add', 'sata',
+                     '--portcount', 2]
+
+        # Attaching the disks using de Sata controller
+        v.customize ['storageattach', :id,
+                     '--storagectl', 'SATA Controller',
+                     '--port', 1,
+                     '--device', 0,
+                     '--type', 'hdd',
+                     '--medium', dataDisk1]
+         v.customize ['storageattach', :id,
+                      '--storagectl', 'SATA Controller',
+                      '--port', 1,
+                      '--device', 0,
+                      '--type', 'hdd',
+                      '--medium', dataDisk1]
+      end
     end
     # node1.vm.provision "ansible" do |ansible|
-    #   ansible.playbook = "../playbooks/webservers.yaml"
+    #   ansible.playbook = "playbooks/webservers.yaml"
     #   ansible.hosts = "webservers"
-    #end
+    # end
   end
   config.vm.define :node2 do |node2|
-    node2.vm.box = "precise32"
+    node2.vm.box = "debian/stretch64"
+    # Setting ssh keys for ansible config
+    node2.ssh.insert_key = false
+    node2.ssh.private_key_path = ["vagrant_private_key", "~/.vagrant.d/insecure_private_key"]
+    node2.vm.provision "file", source: "vagrant_public_key", destination: "~/.ssh/authorized_keys"
     node2.vm.hostname = "node2"
     node2.vm.network :private_network, ip: "10.1.1.102"
     node2.vm.network :private_network, ip: "10.1.2.102"
+    dataDisk2 = './disco2.vdi'
+    dataDisk4 = './disco4.vdi'
     node2.vm.provider "virtualbox" do |v|
-      # Create an extra disk of 100 MB (testing purposes)
-      v.customize ["createhd", 
-                   '--filename', "./disco2",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATA Controller', 
-                   '--port', 1, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "disco2.vdi"]
-            v.customize ["createhd", 
-                   '--filename', "./disco4",
-                   '--size', 100 ]
-      v.customize ['storageattach', :id, 
-                   '--storagectl', 'SATA Controller', 
-                   '--port', 2, 
-                   '--device', 0, 
-                   '--type', 'hdd', 
-                   '--medium', "disco4.vdi"]
+        if not File.exist?(dataDisk2)
+          # Create an extra disk of 100 MB (testing purposes)
+  	      v.customize ["createmedium",
+          	           '--filename', dataDisk2,
+                  	   '--size', 100 ]
+        end
+        if not File.exist?(dataDisk4)
+          v.customize ["createmedium",
+                       '--filename', dataDisk4,
+                       '--size', 100 ]
+
+          # Created in node1
+          # Adding a SATA controller that allow 2 hard drives
+          # v.customize ['storagectl', :id,
+          #              '--name', 'SATA Controller',
+          #              '--add', 'sata',
+          #              '--portcount', 2]
+
+          # Attaching the disks using de Sata controller
+          v.customize ['storageattach', :id,
+                       '--storagectl', 'SATA Controller',
+                       '--port', 1,
+                       '--device', 0,
+                       '--type', 'hdd',
+                       '--medium', dataDisk2]
+           v.customize ['storageattach', :id,
+                        '--storagectl', 'SATA Controller',
+                        '--port', 1,
+                        '--device', 0,
+                        '--type', 'hdd',
+                        '--medium', dataDisk4]
+      end
     end
+
     # node2.vm.provision "ansible" do |ansible|
     #   ansible.playbook = "../playbooks/webservers.yaml"
     #   ansible.hosts = "webservers"
     #end
   end
   config.vm.define :dns do |dns|
-    dns.vm.box = "precise32"
+    dns.vm.box = "debian/stretch64"
+    # Setting ssh keys for ansible config
+    dns.ssh.insert_key = false
+    dns.ssh.private_key_path = ["vagrant_private_key", "~/.vagrant.d/insecure_private_key"]
+    dns.vm.provision "file", source: "vagrant_public_key", destination: "~/.ssh/authorized_keys"
     dns.vm.hostname = "dns"
     #dns.vm.provision :shell, :path => "bootstrap.sh"
     #dns.vm.network :public_network,:bridge=>"wlan0"

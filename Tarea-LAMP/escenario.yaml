@@ -1,5 +1,5 @@
-- include: playbooks/common.yaml
-- include: playbooks/webservers.yaml
-- include: playbooks/bind.yaml
-- include: playbooks/pacemaker-corosync.yaml
-- include: playbooks/drbd.yaml
+- import_playbook: playbooks/common.yaml
+- import_playbook: playbooks/webservers.yaml
+- import_playbook: playbooks/bind.yaml
+- import_playbook: playbooks/pacemaker-corosync.yaml
+- import_playbook: playbooks/drbd.yaml

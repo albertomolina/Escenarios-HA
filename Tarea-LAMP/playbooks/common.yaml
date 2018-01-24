@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: True
+  become: true
   tasks: 
   - name: Set dns node as primary nameserver
     copy: >
@@ -10,13 +10,5 @@
       group=root
       mode=644
 
-  - name: Set local apt repositories
-    copy: >
-      src=files/etc/apt/sources.list
-      dest=/etc/apt/sources.list
-      owner=root
-      group=root
-      mode=644
-
   - name: Ensure ntp is installed
-    apt: pkg=ntp update_cache=yes
+    apt: name=ntp update_cache=yes allow_unauthenticated=yes
